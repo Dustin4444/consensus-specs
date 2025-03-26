@@ -33,6 +33,9 @@
     - [`on_block`](#on_block)
     - [`on_attestation`](#on_attestation)
     - [`on_attester_slashing`](#on_attester_slashing)
+  - [Fork Choice Rule](#fork-choice-rule)
+    - [LMD GHOST](#lmd-ghost)
+    - [Justification and Finalization](#justification-and-finalization)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 <!-- /TOC -->
@@ -486,3 +489,13 @@ def on_attester_slashing(store: Store, attester_slashing: AttesterSlashing) -> N
     for index in indices:
         store.equivocating_indices.add(index)
 ```
+
+### Fork Choice Rule
+
+#### LMD GHOST
+
+The LMD GHOST (Latest Message Driven Greediest Heaviest Observed SubTree) rule is used to determine the head of the chain. It considers the latest messages from validators to determine the head of the chain.
+
+#### Justification and Finalization
+
+Justification and finalization are key concepts in the Ethereum Proof-of-Stake consensus mechanism. Once a block is justified, it means that it has been agreed upon by a majority of validators. Finalization ensures that once a block is finalized, it cannot be reverted.

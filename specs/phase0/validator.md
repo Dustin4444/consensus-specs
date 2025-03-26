@@ -68,6 +68,9 @@ This is an accompanying document to [Phase 0 -- The Beacon Chain](./beacon-chain
   - [Proposer slashing](#proposer-slashing)
   - [Attester slashing](#attester-slashing)
 - [Protection best practices](#protection-best-practices)
+- [Validator Selection](#validator-selection)
+  - [Validator Activation](#validator-activation)
+  - [Validator Exit](#validator-exit)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 <!-- /TOC -->
@@ -655,3 +658,29 @@ A validator client should be considered standalone and should consider the beaco
 3) Recovered validator -- Recovering a validator from a private key will result in an empty local slashing db. Best practice is to import (from a trusted source) that validator's attestation history. See [EIP 3076](https://github.com/ethereum/EIPs/pull/3076/files) for a standard slashing interchange format.
 4) Far future signing requests -- A validator client can be requested to sign a far into the future attestation, resulting in a valid non-slashable request. If the validator client signs this message, it will result in it blocking itself from attesting any other attestation until the beacon-chain reaches that far into the future epoch. This will result in an inactivity penalty and potential ejection due to low balance.
 A validator client should prevent itself from signing such requests by: a) keeping a local time clock if possible and following best practices to stop time server attacks and b) refusing to sign, by default, any message that has a large (>6h) gap from the current slashing protection database indicated a time "jump" or a long offline event. The administrator can manually override this protection to restart the validator after a genuine long offline event.
+
+## Validator Selection
+
+### Validator Activation
+
+In normal operation, the validator is quickly activated, at which point the validator is added to the shuffling and begins validation after an additional `MAX_SEED_LOOKAHEAD` epochs (25.6 minutes).
+
+The function [`is_active_validator`](./beacon-chain.md#is_active_validator) can be used to check if a validator is active during a given epoch. Usage is as follows:
+
+```python
+def check_if_validator_active(state: BeaconState, validator_index: ValidatorIndex) -> bool:
+    validator = state.validators[validator_index]
+    return is_active_validator(validator, get_current_epoch(state))
+```
+
+Once a validator is activated, the validator is assigned [responsibilities](#beacon-chain-responsibilities) until exited.
+
+*Note*: There is a maximum validator churn per finalized epoch, so the delay until activation is variable depending upon finality, total active validator balance, and the number of validators in the queue to be activated.
+
+### Validator Exit
+
+A validator can exit voluntarily by submitting a `VoluntaryExit` object. The exit must satisfy the verification conditions found in [voluntary exits processing](./beacon-chain.md#voluntary-exits).
+
+A validator can also be forcefully exited through slashing. Slashing occurs when a validator is found to have violated the protocol rules, such as signing two conflicting attestations or blocks. The slashing must satisfy the verification conditions found in [attester slashings processing](./beacon-chain.md#attester-slashings) and [proposer slashings processing](./beacon-chain.md#proposer-slashings).
+
+Once exited, a validator is no longer part of the active validator set and will not be assigned any new responsibilities. The validator's balance will be gradually withdrawn over time, and the validator will eventually be able to withdraw their remaining balance to their specified withdrawal address.

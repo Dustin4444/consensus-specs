@@ -14,6 +14,9 @@
     - [Withdrawal credentials](#withdrawal-credentials)
     - [`DepositEvent` log](#depositevent-log)
 - [Solidity code](#solidity-code)
+- [Deposit Contract](#deposit-contract)
+  - [Deposit Process](#deposit-process)
+  - [Deposit Contract Address](#deposit-contract-address)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 <!-- /TOC -->
@@ -75,3 +78,17 @@ Every deposit emits a `DepositEvent` log for consumption by the beacon chain. Th
 The deposit contract source code, written in Solidity, is available [here](../../solidity_deposit_contract/deposit_contract.sol).
 
 *Note*: To save on gas, the deposit contract uses a progressive Merkle root calculation algorithm that requires only O(log(n)) storage. See [here](https://github.com/ethereum/research/blob/master/beacon_chain_impl/progressive_merkle_tree.py) for a Python implementation, and [here](https://github.com/runtimeverification/verified-smart-contracts/blob/master/deposit/formal-incremental-merkle-tree-algorithm.pdf) for a formal correctness proof.
+
+## Deposit Contract
+
+### Deposit Process
+
+Validators join the PoS system by depositing ETH into a special contract on the Ethereum mainnet. The deposit process involves sending a transaction to the deposit contract with the required amount of ETH and the necessary data, including the validator's public key, withdrawal credentials, and a signature. Once the deposit is made, the validator is added to the queue for activation in the PoS system.
+
+### Deposit Contract Address
+
+The deposit contract is deployed on the Ethereum mainnet at the following address:
+
+`0x00000000219ab540356cBB839Cbe05303d7705Fa`
+
+This address is used to send deposits and interact with the contract for validator onboarding.
