@@ -6,6 +6,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Introduction](#introduction)
+- [Proof-of-Stake Consensus Mechanism](#proof-of-stake-consensus-mechanism)
+  - [Beacon Chain](#beacon-chain)
+  - [Validator Selection](#validator-selection)
+  - [Fork Choice Rule](#fork-choice-rule)
+  - [Finality](#finality)
 - [Notation](#notation)
 - [Custom types](#custom-types)
 - [Constants](#constants)
@@ -144,6 +149,24 @@ This document represents the specification for Phase 0 -- The Beacon Chain.
 
 At the core of Ethereum proof-of-stake is a system chain called the "beacon chain". The beacon chain stores and manages the registry of validators. In the initial deployment phases of proof-of-stake, the only mechanism to become a validator is to make a one-way ETH transaction to a deposit contract on the Ethereum proof-of-work chain. Activation as a validator happens when deposit receipts are processed by the beacon chain, the activation balance is reached, and a queuing process is completed. Exit is either voluntary or done forcibly as a penalty for misbehavior.
 The primary source of load on the beacon chain is "attestations". Attestations are simultaneously availability votes for a shard block (in a later upgrade) and proof-of-stake votes for a beacon block (Phase 0).
+
+## Proof-of-Stake Consensus Mechanism
+
+### Beacon Chain
+
+The core of the Ethereum PoS system is the Beacon Chain, which is responsible for managing the PoS protocol, including validator management, block proposal, and finality.
+
+### Validator Selection
+
+Validators are selected to propose and attest to blocks based on their stake. The more cryptocurrency a validator stakes, the higher their chances of being selected.
+
+### Fork Choice Rule
+
+The PoS system uses a fork choice rule to determine the canonical chain. The rule is based on the concept of "latest message driven" (LMD) GHOST, which considers the latest messages from validators to determine the head of the chain.
+
+### Finality
+
+Finality is a key concept in PoS, ensuring that once a block is finalized, it cannot be reverted. This is achieved through a process called "justification and finalization."
 
 ## Notation
 
