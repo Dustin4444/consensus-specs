@@ -63,7 +63,7 @@ CODESPELL_VENV = $(VENV)/bin/codespell
 $(VENV):
 	@echo "Creating virtual environment"
 	@python3 -m venv $(VENV)
-	@$(PIP_VENV) install --quiet uv==0.5.24
+	@$(PIP_VENV) install --quiet uv==0.5.25
 
 ###############################################################################
 # Specification
